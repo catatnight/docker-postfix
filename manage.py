@@ -17,7 +17,7 @@ if __name__=="__main__":
     ENDC = '\033[0m'
 
   def _execute(signal):
-    signal_dict = {"create" : "docker run -p 25:25 --name postfix -d catatnight/postfix", \
+    signal_dict = {"create" : "docker run --net=host --name postfix -d catatnight/postfix", \
                    "start"  : "docker start   postfix", \
                    "stop"   : "docker stop    postfix", \
                    "restart": "docker restart postfix", \
