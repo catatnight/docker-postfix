@@ -31,7 +31,8 @@ run postfix with smtp authentication (sasldb) and OpenDKIM in a docker container
   ```
 
 ## Note
-+ Don't forget to close your MTA software on host machine or assign smtp to port other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))
++ Port 25 and 587 (TLS only) is open
++ You can assign the port of MTA on the host machine to one other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))
 + Read the reference below to find out how to generate domain keys and add public key to the domain's DNS records 
 
 ## Reference
