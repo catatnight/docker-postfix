@@ -37,8 +37,7 @@ postconf -e broken_sasl_auth_clients=yes
 postconf -e smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination
 
 # /etc/postfix/master.cf
-postconf -M smtp/inet="smtp   inet   n   -   n   -   -   smtpd"
-postconf -M submission/inet="submission   inet   n   -   n   -   -   smtpd"
+postconf -M submission/inet="submission   inet   n   -   -   -   -   smtpd"
 postconf -P "submission/inet/syslog_name=postfix/submission"
 postconf -P "submission/inet/smtpd_tls_security_level=encrypt"
 postconf -P "submission/inet/smtpd_sasl_auth_enable=yes"
@@ -51,10 +50,14 @@ pwcheck_method: auxprop
 auxprop_plugin: sasldb
 mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
 EOF
+
+# sasldb2
 echo $smtp_user | tr , \\n > /tmp/passwd
 while IFS=':' read -r _user _pwd; do
   echo $_pwd | saslpasswd2 -p -c -u $maildomain $_user
 done < /tmp/passwd
+mv /etc/sasldb2 /var/spool/postfix/etc/
+ln -sf /var/spool/postfix/etc/sasldb2 /etc/
 chown postfix.sasl /etc/sasldb2
 
 #############

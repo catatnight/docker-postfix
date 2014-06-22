@@ -3,7 +3,7 @@
 import shlex, subprocess
 import argparse
 
-if __name__=="__main__":
+if __name__ == '__main__':
   app_name = 'postfix'
   
   parser = argparse.ArgumentParser(description='Manage %s container' % app_name)
