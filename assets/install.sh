@@ -8,9 +8,6 @@ nodaemon=true
 [program:postfix]
 command=/opt/postfix.sh
 
-[program:opendkim]
-command=/usr/sbin/opendkim -f
-
 [program:rsyslog]
 command=/usr/sbin/rsyslogd -n -c3
 EOF
@@ -35,22 +32,12 @@ postconf -e myhostname=$maildomain
 postconf -e smtpd_sasl_auth_enable=yes 
 postconf -e broken_sasl_auth_clients=yes 
 postconf -e smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination
-
-# /etc/postfix/master.cf
-postconf -M submission/inet="submission   inet   n   -   -   -   -   smtpd"
-postconf -P "submission/inet/syslog_name=postfix/submission"
-postconf -P "submission/inet/smtpd_tls_security_level=encrypt"
-postconf -P "submission/inet/smtpd_sasl_auth_enable=yes"
-postconf -P "submission/inet/milter_macro_daemon_name=ORIGINATING"
-postconf -P "submission/inet/smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination"
-
 # smtpd.conf
 cat >> /etc/postfix/sasl/smtpd.conf <<EOF
 pwcheck_method: auxprop
 auxprop_plugin: sasldb
 mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
 EOF
-
 # sasldb2
 echo $smtp_user | tr , \\n > /tmp/passwd
 while IFS=':' read -r _user _pwd; do
@@ -60,9 +47,34 @@ mv /etc/sasldb2 /var/spool/postfix/etc/
 ln -sf /var/spool/postfix/etc/sasldb2 /etc/
 chown postfix.sasl /etc/sasldb2
 
+############
+# Enable TLS
+############
+if [[ -f /etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.crt") && -f /etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.key") ]]; then
+  # /etc/postfix/main.cf
+  postconf -e smtpd_tls_cert_file=/etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.crt")
+  postconf -e smtpd_tls_key_file=/etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.key")
+  chmod 400 /etc/postfix/certs/*.*
+  # /etc/postfix/master.cf
+  postconf -M submission/inet="submission   inet   n   -   -   -   -   smtpd"
+  postconf -P "submission/inet/syslog_name=postfix/submission"
+  postconf -P "submission/inet/smtpd_tls_security_level=encrypt"
+  postconf -P "submission/inet/smtpd_sasl_auth_enable=yes"
+  postconf -P "submission/inet/milter_macro_daemon_name=ORIGINATING"
+  postconf -P "submission/inet/smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination"
+fi
+
 #############
 #  opendkim
 #############
+if [[ ! -f /etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private") ]]; then
+  exit 0
+fi
+cat >> /etc/supervisor/conf.d/supervisord.conf <<EOF
+
+[program:opendkim]
+command=/usr/sbin/opendkim -f
+EOF
 # /etc/postfix/main.cf
 postconf -e milter_protocol=2
 postconf -e milter_default_action=accept
@@ -104,10 +116,10 @@ localhost
 *.$maildomain
 EOF
 cat >> /etc/opendkim/KeyTable <<EOF
-mail._domainkey.$maildomain $maildomain:mail:/etc/opendkim/keys/docker/mail.private
+mail._domainkey.$maildomain $maildomain:mail:/etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private")
 EOF
-cat >> etc/opendkim/SigningTable <<EOF
+cat >> /etc/opendkim/SigningTable <<EOF
 *@$maildomain mail._domainkey.$maildomain
 EOF
-chown opendkim:opendkim /etc/opendkim/keys/docker/mail.private
-chmod 400 /etc/opendkim/keys/docker/mail.private
+chown opendkim:opendkim /etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private")
+chmod 400 /etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private")

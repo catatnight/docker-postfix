@@ -14,8 +14,10 @@ RUN apt-get -y install postfix sasl2-bin opendkim opendkim-tools
 RUN apt-get -y install openssl libssl1.0.0
 
 # Add files
-#opendkim
-ADD assets/domainkeys/mail.private /etc/opendkim/keys/docker/
+#certs
+ADD assets/certs /etc/postfix/certs
+#domainkeys
+ADD assets/domainkeys /etc/opendkim/domainkeys
 
 # Configure
 ENV maildomain  mail.example.com
