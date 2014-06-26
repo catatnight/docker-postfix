@@ -50,10 +50,10 @@ chown postfix.sasl /etc/sasldb2
 ############
 # Enable TLS
 ############
-if [[ -f /etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.crt") && -f /etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.key") ]]; then
+if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/certs -iname *.key)" ]]; then
   # /etc/postfix/main.cf
-  postconf -e smtpd_tls_cert_file=/etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.crt")
-  postconf -e smtpd_tls_key_file=/etc/postfix/certs/$(ls /etc/postfix/certs | grep "\.key")
+  postconf -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname *.crt)
+  postconf -e smtpd_tls_key_file=$(find /etc/postfix/certs -iname *.key)
   chmod 400 /etc/postfix/certs/*.*
   # /etc/postfix/master.cf
   postconf -M submission/inet="submission   inet   n   -   -   -   -   smtpd"
@@ -67,7 +67,8 @@ fi
 #############
 #  opendkim
 #############
-if [[ ! -f /etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private") ]]; then
+
+if [[ -z "$(find /etc/opendkim/domainkeys -iname *.private)" ]]; then
   exit 0
 fi
 cat >> /etc/supervisor/conf.d/supervisord.conf <<EOF
@@ -116,10 +117,10 @@ localhost
 *.$maildomain
 EOF
 cat >> /etc/opendkim/KeyTable <<EOF
-mail._domainkey.$maildomain $maildomain:mail:/etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private")
+mail._domainkey.$maildomain $maildomain:mail:$(find /etc/opendkim/domainkeys -iname *.private)
 EOF
 cat >> /etc/opendkim/SigningTable <<EOF
 *@$maildomain mail._domainkey.$maildomain
 EOF
-chown opendkim:opendkim /etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private")
-chmod 400 /etc/opendkim/domainkeys/$(ls /etc/opendkim/domainkeys | grep "\.private")
+chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
+chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
