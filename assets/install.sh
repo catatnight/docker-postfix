@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#judgement
+if [[ -a /etc/supervisor/conf.d/supervisord.conf ]]; then
+  exit 0
+fi
+
 #supervisor
 cat > /etc/supervisor/conf.d/supervisord.conf <<EOF
 [supervisord]
