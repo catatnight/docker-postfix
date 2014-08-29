@@ -10,36 +10,35 @@ TLS and OpenDKIM support are optional.
 ## Installation
 1. Build image
 
-  ```bash
-  $ sudo docker pull catatnight/postfix
-  ```
+	```bash
+	$ sudo docker pull catatnight/postfix
+	```
 
 ## Usage
 1. Create postfix container with smtp authentication
 
-  ```bash
-  $ sudo docker run -p 25:25 \
-      -e maildomain=mail.example.com -e smtp_user=user:pwd \
-      --name postfix -d catatnight/postfix
-  # Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
-  ```
+	```bash
+	$ sudo docker run -p 25:25 \
+			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			--name postfix -d catatnight/postfix
+	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
+	```
 2. Enable OpenDKIM: save your domain key ```.private``` in ```/path/to/domainkeys```
 
-  ```bash
-  $ sudo docker run -p 25:25 \
-      -e maildomain=mail.example.com -e smtp_user=user:pwd \
-      -v /path/to/domainkeys:/etc/opendkim/domainkeys \
-      --name postfix -d catatnight/postfix
-  ```
-
+	```bash
+	$ sudo docker run -p 25:25 \
+			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
+			--name postfix -d catatnight/postfix
+	```
 3. Enable TLS(587): save your SSL certificates ```.key``` and ```.crt``` to  ```/path/to/certs```
 
-  ```bash
-  $ sudo docker run -p 587:587 \
-      -e maildomain=mail.example.com -e smtp_user=user:pwd \
-      -v /path/to/certs:/etc/postfix/certs \
-      --name postfix -d catatnight/postfix
-  ```
+	```bash
+	$ sudo docker run -p 587:587 \
+			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-v /path/to/certs:/etc/postfix/certs \
+			--name postfix -d catatnight/postfix
+	```
 
 ## Note
 + You can assign the port of MTA on the host machine to one other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))
