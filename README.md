@@ -41,6 +41,7 @@ TLS and OpenDKIM support are optional.
 	```
 
 ## Note
++ Login credential should be set to (`username@mail.example.com`, `password`) in Smtp Client
 + You can assign the port of MTA on the host machine to one other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))
 + Read the reference below to find out how to generate domain keys and add public key to the domain's DNS records
 
