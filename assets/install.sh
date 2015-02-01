@@ -85,6 +85,7 @@ postconf -e milter_protocol=2
 postconf -e milter_default_action=accept
 postconf -e smtpd_milters=inet:localhost:12301
 postconf -e non_smtpd_milters=inet:localhost:12301
+postconf -e smtp_tls_security_level=encrypt
 
 cat >> /etc/opendkim.conf <<EOF
 AutoRestart             Yes
