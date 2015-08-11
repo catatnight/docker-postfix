@@ -1,6 +1,8 @@
 postfix:
-  build: .
-  env_file:
-    - ./docker-compose.env
-  ports:
-    - 25:25
+    build: .
+    env_file:
+        - ./docker-compose.env
+    ports:
+        - 25:25
+    environment:
+        - DNSDOCK_IMAGE=smtp
