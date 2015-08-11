@@ -1,0 +1,6 @@
+postfix:
+  build: .
+  env_file:
+    - ./docker-compose.env
+  ports:
+    - 25:25
