@@ -83,8 +83,8 @@ EOF
 # /etc/postfix/main.cf
 postconf -e milter_protocol=2
 postconf -e milter_default_action=accept
-postconf -e smtpd_milters=inet:localhost:12301
-postconf -e non_smtpd_milters=inet:localhost:12301
+postconf -e smtpd_milters=inet:localhost:12301,inet:localhost:12302
+postconf -e non_smtpd_milters=inet:localhost:12301,inet:localhost:12302
 
 cat >> /etc/opendkim.conf <<EOF
 AutoRestart             Yes
@@ -126,5 +126,39 @@ EOF
 cat >> /etc/opendkim/SigningTable <<EOF
 *@$maildomain mail._domainkey.$maildomain
 EOF
+chown opendkim:opendkim /etc/opendkim/domainkeys
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
+chmod 500 /etc/opendkim/domainkeys
 chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
+
+#############
+# opendmarc
+#############
+cat >> /etc/supervisor/conf.d/supervisord.conf <<EOF
+
+[program:opendmarc]
+command=/usr/sbin/opendmarc -f
+EOF
+
+cat >> /etc/opendmarc.conf <<EOF
+AuthservID $maildomain
+PidFile /var/run/opendmarc.pid 
+RejectFailures false
+Syslog true
+TrustedAuthservIDs $maildomain
+UMask 0002
+UserID opendmarc:opendmarc
+IgnoreHosts /etc/opendmarc/ignore.hosts
+HistoryFile /var/run/opendmarc/opendmarc.dat
+EOF
+
+mkdir /etc/opendmarc
+cat >> /etc/opendmarc/ignore.hosts <<EOF
+127.0.0.1
+localhost
+192.168.0.1/24
+EOF
+
+cat >> /etc/default/opendmarc <<EOF
+SOCKET="inet:12302@localhost"
+EOF
