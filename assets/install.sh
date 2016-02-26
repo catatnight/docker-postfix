@@ -52,6 +52,18 @@ done < /tmp/passwd
 chown postfix.sasl /etc/sasldb2
 
 ############
+# Enable Transport map
+############
+echo $transport_map | tr , \\n > /tmp/transport_map
+while IFS=':' read -r _domain _cmd _relay; do
+cat >> /etc/transport_map <<EOF
+$_domain $_cmd:$_relay
+EOF
+done < /tmp/transport_map
+postmap /etc//transport_map
+postconf -e transport_maps=hash:/etc/transport_map
+
+############
 # Enable TLS
 ############
 if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/certs -iname *.key)" ]]; then
@@ -128,3 +140,5 @@ cat >> /etc/opendkim/SigningTable <<EOF
 EOF
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
 chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
+
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
