@@ -40,6 +40,17 @@ TLS and OpenDKIM support are optional.
 			--name postfix -d catatnight/postfix
 	```
 
+4. (Optional) Configure postfix to allow relaying from a local docker network (containers in the same network):
+```
+network=`docker network inspect --format='{{range .IPAM.Config}}{{.Subnet}}{{end}}' my_docker_network`
+
+docker run -d --name smtp \
+  --net=my_docker_network \
+  -e maildomain=mydomain.localhost \
+  -e mynetworks=127.0.0.0/8,$network \
+  myrepo/postfix
+```
+
 ## Note
 + Login credential should be set to (`username@mail.example.com`, `password`) in Smtp Client
 + You can assign the port of MTA on the host machine to one other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))

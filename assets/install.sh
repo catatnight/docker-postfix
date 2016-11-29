@@ -5,6 +5,12 @@ if [[ -a /etc/supervisor/conf.d/supervisord.conf ]]; then
   exit 0
 fi
 
+if [ -z "$maildomain" ]; then
+  echo '$maildomain env variable not set, exiting'
+  exit 1
+fi
+echo "*** maildomain = $maildomain"
+
 #supervisor
 cat > /etc/supervisor/conf.d/supervisord.conf <<EOF
 [supervisord]
@@ -29,6 +35,11 @@ chmod +x /opt/postfix.sh
 postconf -e myhostname=$maildomain
 postconf -F '*/*/chroot = n'
 
+if [ -n "$mynetworks" ]; then
+  echo "*** configuring mynetworks = $mynetworks"
+  postconf -e mynetworks=$mynetworks
+fi
+
 ############
 # SASL SUPPORT FOR CLIENTS
 # The following options set parameters needed by Postfix to enable
@@ -37,7 +48,7 @@ postconf -F '*/*/chroot = n'
 # /etc/postfix/main.cf
 postconf -e smtpd_sasl_auth_enable=yes
 postconf -e broken_sasl_auth_clients=yes
-postconf -e smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination
+postconf -e smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination
 # smtpd.conf
 cat >> /etc/postfix/sasl/smtpd.conf <<EOF
 pwcheck_method: auxprop
@@ -65,7 +76,7 @@ if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/ce
   postconf -P "submission/inet/smtpd_tls_security_level=encrypt"
   postconf -P "submission/inet/smtpd_sasl_auth_enable=yes"
   postconf -P "submission/inet/milter_macro_daemon_name=ORIGINATING"
-  postconf -P "submission/inet/smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination"
+  postconf -P "submission/inet/smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject_unauth_destination"
 fi
 
 #############
@@ -128,3 +139,4 @@ cat >> /etc/opendkim/SigningTable <<EOF
 EOF
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
 chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
+
