@@ -1,6 +1,8 @@
 docker-postfix
 ==============
 
+Modified from catatnight/postfix to add virtualhost support
+
 run postfix with smtp authentication (sasldb) in a docker container.
 TLS and OpenDKIM support are optional.
 
@@ -11,7 +13,7 @@ TLS and OpenDKIM support are optional.
 1. Build image
 
 	```bash
-	$ sudo docker pull catatnight/postfix
+	$ ./build.sh
 	```
 
 ## Usage
@@ -20,7 +22,7 @@ TLS and OpenDKIM support are optional.
 	```bash
 	$ sudo docker run -p 25:25 \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
-			--name postfix -d catatnight/postfix
+			--name postfix -d ben-xo/postfix
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
 	```
 2. Enable OpenDKIM: save your domain key ```.private``` in ```/path/to/domainkeys```
@@ -29,7 +31,7 @@ TLS and OpenDKIM support are optional.
 	$ sudo docker run -p 25:25 \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
 			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
-			--name postfix -d catatnight/postfix
+			--name postfix -d ben-xo/postfix
 	```
 3. Enable TLS(587): save your SSL certificates ```.key``` and ```.crt``` to  ```/path/to/certs```
 
@@ -37,7 +39,7 @@ TLS and OpenDKIM support are optional.
 	$ sudo docker run -p 587:587 \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
 			-v /path/to/certs:/etc/postfix/certs \
-			--name postfix -d catatnight/postfix
+			--name postfix -d ben-xo/postfix
 	```
 
 ## Note

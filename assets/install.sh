@@ -29,6 +29,9 @@ chmod +x /opt/postfix.sh
 postconf -e myhostname=$maildomain
 postconf -F '*/*/chroot = n'
 
+postconf -e smtp_use_tls=yes
+postconf -e smtp_tls_security_level=may
+
 ############
 # SASL SUPPORT FOR CLIENTS
 # The following options set parameters needed by Postfix to enable
@@ -50,6 +53,14 @@ while IFS=':' read -r _user _pwd; do
   echo $_pwd | saslpasswd2 -p -c -u $maildomain $_user
 done < /tmp/passwd
 chown postfix.sasl /etc/sasldb2
+
+############
+# Virtual Domain support
+############
+if [[ "$virtual_domains" != "" ]]; then
+  postconf -e virtual_alias_maps=hash:/etc/postfix/virtual
+  postconf -e virtual_alias_domains=$virtual_domains
+fi
 
 ############
 # Enable TLS
