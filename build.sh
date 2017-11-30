@@ -1,3 +1,3 @@
 #!/bin/bash -xe
 
-docker build -t ben-xo/postfix .
+docker build -t benxo/postfix .
