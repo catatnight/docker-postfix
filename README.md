@@ -60,7 +60,7 @@ TLS and OpenDKIM support are optional.
 + Login credential should be set to (`username@mail.example.com`, `password`) in Smtp Client
 + You can assign the port of MTA on the host machine to one other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))
 + Read the reference below to find out how to generate domain keys and add public key to the domain's DNS records
-+ If you want a persistent queue between restarts, you will need to extract an empty spool from /var/spool/postfix inside the container, preserving IDs and permissions!
++ If you want a persistent queue between restarts, you will need to extract an empty spool from /var/spool/postfix inside the container, preserving IDs and permissions! One is provided in postfix-spool.tgz
 
 ## Reference
 + [Postfix SASL Howto](http://www.postfix.org/SASL_README.html)
