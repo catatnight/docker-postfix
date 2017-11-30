@@ -13,7 +13,7 @@ TLS and OpenDKIM support are optional.
 1. Build image
 
 	```bash
-	$ ./build.sh
+	$ sudo docker pull benxo/postfix
 	```
 
 ## Usage
@@ -31,7 +31,7 @@ TLS and OpenDKIM support are optional.
 	$ sudo docker run -p 25:25 \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
 			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
-			--name postfix -d ben-o/postfix
+			--name postfix -d benxo/postfix
 	```
 3. Enable TLS(587): save your SSL certificates ```.key``` and ```.crt``` to  ```/path/to/certs```
 
