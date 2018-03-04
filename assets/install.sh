@@ -26,7 +26,7 @@ service postfix start
 tail -f /var/log/mail.log
 EOF
 chmod +x /opt/postfix.sh
-postconf -e myhostname=$maildomain
+postconf -e myhostname=$MAIL_DOMAIN
 postconf -F '*/*/chroot = n'
 
 ############
@@ -45,10 +45,9 @@ auxprop_plugin: sasldb
 mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
 EOF
 # sasldb2
-echo $smtp_user | tr , \\n > /tmp/passwd
 while IFS=':' read -r _user _pwd; do
-  echo $_pwd | saslpasswd2 -p -c -u $maildomain $_user
-done < /tmp/passwd
+  echo $_pwd | saslpasswd2 -p -c -u $MAIL_DOMAIN $_user
+done < "$MAIL_USERS_FILE"
 chown postfix.sasl /etc/sasldb2
 
 ############
@@ -66,6 +65,16 @@ if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/ce
   postconf -P "submission/inet/smtpd_sasl_auth_enable=yes"
   postconf -P "submission/inet/milter_macro_daemon_name=ORIGINATING"
   postconf -P "submission/inet/smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination"
+fi
+
+#############
+# Virtual hosts
+#############
+
+if [[ -f /etc/postfix/virtual ]]; then
+  postconf -e virtual_alias_domains=$MAIL_DOMAIN
+  postconf -e virtual_alias_maps=hash:/etc/postfix/virtual
+  postmap /etc/postfix/virtual
 fi
 
 #############
@@ -118,13 +127,13 @@ cat >> /etc/opendkim/TrustedHosts <<EOF
 localhost
 192.168.0.1/24
 
-*.$maildomain
+*.$MAIL_DOMAIN
 EOF
 cat >> /etc/opendkim/KeyTable <<EOF
-mail._domainkey.$maildomain $maildomain:mail:$(find /etc/opendkim/domainkeys -iname *.private)
+mail._domainkey.$MAIL_DOMAIN $MAIL_DOMAIN:mail:$(find /etc/opendkim/domainkeys -iname *.private)
 EOF
 cat >> /etc/opendkim/SigningTable <<EOF
-*@$maildomain mail._domainkey.$maildomain
+*@$MAIL_DOMAIN mail._domainkey.$MAIL_DOMAIN
 EOF
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
 chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
