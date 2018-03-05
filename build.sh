@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker build -t catatnight/postfix .
+docker build -t vivvo/postfix-relay .
+
