@@ -42,6 +42,8 @@ TLS and OpenDKIM support are optional.
 
 ## Note
 + Login credential should be set to (`username@mail.example.com`, `password`) in Smtp Client
++ If `smtp_user` is set to an existing file, the `user:password` string will be read from that file
+  (to allow integration with docker-swarm secrets).
 + You can assign the port of MTA on the host machine to one other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))
 + Read the reference below to find out how to generate domain keys and add public key to the domain's DNS records
 
