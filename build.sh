@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker build -t tonyarkles/postfix-relay .
+docker build -t vivvo/postfix-relay .
+

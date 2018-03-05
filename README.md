@@ -27,16 +27,19 @@ https://linode.com/docs/email/postfix/postfix-smtp-debian7/
 			-e smtp_user=user:pwd \
 			-e networks="10.0.0.0/8" -e relay_host=some.relay.host \
 			-e relay_user=tony:banana \
-			--name postfix -d tonyarkles/postfix-relay
+			--name postfix -d vivvo/postfix-relay
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
 	```
+
+Note that the following were in the original repository, but I haven't tried them out on this one.
+
 2. Enable OpenDKIM: save your domain key ```.private``` in ```/path/to/domainkeys```
 
 	```bash
 	$ sudo docker run -p 25:25 \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
 			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
-			--name postfix -d catatnight/postfix
+			--name postfix -d vivvo/postfix-relay
 	```
 3. Enable TLS(587): save your SSL certificates ```.key``` and ```.crt``` to  ```/path/to/certs```
 
@@ -44,7 +47,7 @@ https://linode.com/docs/email/postfix/postfix-smtp-debian7/
 	$ sudo docker run -p 587:587 \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
 			-v /path/to/certs:/etc/postfix/certs \
-			--name postfix -d catatnight/postfix
+			--name postfix -d vivvo/postfix-relay
 	```
 
 ## Note
