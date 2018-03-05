@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t catatnight/postfix .
+docker build -t tonyarkles/postfix-relay .

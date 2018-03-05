@@ -27,7 +27,28 @@ tail -f /var/log/mail.log
 EOF
 chmod +x /opt/postfix.sh
 postconf -e myhostname=$maildomain
+postconf -e myorigin=$origin
 postconf -F '*/*/chroot = n'
+
+############
+# Relaying Support
+############
+
+if [[ -z "$relay_host" ]]; then
+    echo "Expected relay_host environment variable to be set!" 1>&2
+    exit 1
+fi
+
+cat <<EOF > /etc/postfix/sasl_passwd
+${relay_host} $relay_user
+EOF
+postmap /etc/postfix/sasl_passwd
+postconf -e "relayhost=${relay_host}"
+postconf -e "smtp_sasl_auth_enable=yes"
+postconf -e "smtp_sasl_security_options=noanonymous"
+postconf -e "smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd"
+postconf -e "smtp_use_tls=yes"
+postconf -e "smtp_tls_CAfile=/etc/ssl/certs/ca-certificates.crt"
 
 ############
 # SASL SUPPORT FOR CLIENTS

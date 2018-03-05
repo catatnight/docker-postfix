@@ -4,6 +4,10 @@ docker-postfix
 run postfix with smtp authentication (sasldb) in a docker container.
 TLS and OpenDKIM support are optional.
 
+This image also supports relaying, per
+http://www.postfix.org/STANDARD_CONFIGURATION_README.html and
+https://linode.com/docs/email/postfix/postfix-smtp-debian7/
+
 ## Requirement
 + Docker 1.0
 
@@ -19,8 +23,11 @@ TLS and OpenDKIM support are optional.
 
 	```bash
 	$ sudo docker run -p 25:25 \
-			-e maildomain=mail.example.com -e smtp_user=user:pwd \
-			--name postfix -d catatnight/postfix
+			-e maildomain=mail.example.com -e origin=example.com \
+			-e smtp_user=user:pwd \
+			-e networks="10.0.0.0/8" -e relay_host=some.relay.host \
+			-e relay_user=tony:banana \
+			--name postfix -d tonyarkles/postfix-relay
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
 	```
 2. Enable OpenDKIM: save your domain key ```.private``` in ```/path/to/domainkeys```
