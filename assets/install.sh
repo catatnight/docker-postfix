@@ -45,7 +45,11 @@ auxprop_plugin: sasldb
 mech_list: PLAIN LOGIN CRAM-MD5 DIGEST-MD5 NTLM
 EOF
 # sasldb2
-echo $smtp_user | tr , \\n > /tmp/passwd
+if  [ -f /run/secrets/smtp_user ]; then
+    cat /run/secrets/smtp_user | tr , \\n > /tmp/passwd
+else
+    echo $smtp_user | tr , \\n > /tmp/passwd
+fi
 while IFS=':' read -r _user _pwd; do
   echo $_pwd | saslpasswd2 -p -c -u $maildomain $_user
 done < /tmp/passwd
