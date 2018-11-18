@@ -1,4 +1,4 @@
-From ubuntu:trusty
+From ubuntu:18.04
 MAINTAINER Elliott Ye
 
 # Set noninteractive mode for apt-get
@@ -9,7 +9,7 @@ RUN apt-get update
 
 # Start editing
 # Install package here for cache
-RUN apt-get -y install supervisor postfix sasl2-bin opendkim opendkim-tools
+RUN apt-get -y install supervisor postfix sasl2-bin opendkim opendkim-tools rsyslog
 
 # Add files
 ADD assets/install.sh /opt/install.sh
