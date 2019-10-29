@@ -1,53 +1,87 @@
 # docker-postfix
 
-Run postfix with smtp authentication (sasldb) in a docker container.
-TLS and OpenDKIM support are optional.
+Postfix in a container with optional SMTP authentication (sasldb), DKIM support, TLS support.
 
 ## Installation
-1. Build image
 
-	```bash
-	docker build -t kingsquare/postfix https://github.com/kingsquare/docker-postfix.git
-	```
+Pull from docker hub
 
-    or pull from docker hub
+    docker pull kingsquare/postfix
 
-	```bash
-	docker pull kingsquare/postfix
-	```
+Build local image from repo
+
+    docker build -t kingsquare/postfix https://github.com/kingsquare/docker-postfix.git
 
 ## Usage
+
 1. Create postfix container with smtp authentication
 
 	```bash
-	docker run -p 25:25 \
-			-e maildomain=mail.example.com -e smtp_user=user:pwd \
-			--name postfix -d catatnight/postfix
+	docker run \
+	    -p 25:25 \
+        -e maildomain=mail.example.com \
+        -e smtp_user=user:pwd \
+        --name postfix \
+        -d kingsquare/postfix
+ 
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
 	```
 
-2. Enable OpenDKIM: save your domain key ```.private``` in ```/path/to/domainkeys```
+1. Create postfix container with smtp authentication
 
 	```bash
-	docker run -p 25:25 \
-        -e maildomain=mail.example.com -e smtp_user=user:pwd \
+	docker run \
+        -p 25:25 \
+        -e maildomain=mail.example.com \
+        -e smtp_user=/etc/postfix/smtp_user \
+        --name postfix \
+        -d kingsquare/postfix
+ 
+	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
+ 
+	# Set multiple user credentials from file: -v /some/file:/etc/postfix/smtp_users
+ 
+1. Enable OpenDKIM: save your domain key `.private` in `/path/to/domainkeys`
+
+	```bash
+	docker run \
+        -p 25:25 \
+        -e maildomain=mail.example.com \
+        -e smtp_user=user:pwd \
         -e dkimselector=mail \
         -v /path/to/domainkeys:/etc/opendkim/domainkeys \
-        --name postfix -d catatnight/postfix
+        --name postfix \
+        -d kingsquare/postfix
 	```
 
-3. Enable TLS(587): save your SSL certificates ```.key``` and ```.crt``` to  ```/path/to/certs```
+1. Enable OpenDKIM: override all config with custom directory
 
 	```bash
-	docker run -p 587:587 \
-        -e maildomain=mail.example.com -e smtp_user=user:pwd \
-        -v /path/to/certs:/etc/postfix/certs \
-        --name postfix -d catatnight/postfix
+	docker run \
+	    -p 25:25 \
+        -e maildomain=mail.example.com \
+        -e smtp_user=user:pwd \
+        -e dkimselector=mail \
+        -v /path/to/etc/opendkim:/etc/opendkim \
+        --name postfix \
+        -d kingsquare/postfix
 	```
+
+1. Enable TLS(587): save your SSL certificates .key` and `.crt` to  `/path/to/certs`
+    
+    ```bash
+    docker run \
+        -p 587:587 \
+        -e maildomain=mail.example.com \
+        -e smtp_user=user:pwd \
+        -v /path/to/certs:/etc/postfix/certs \
+        --name postfix \
+        -d kingsquare/postfix
+    ```
 
 ## Notes
 
-+ Login credential should be set to (`username@mail.example.com`, `password`) in Smtp Client
++ Login credential should be set to (`username@mail.example.com`, `password`) in SMTP Client
 + You can assign the port of MTA on the host machine to one other than 25 ([postfix how-to](http://www.postfix.org/MULTI_INSTANCE_README.html))
 + Read the reference below to find out how to generate domain keys and add public key to the domain's DNS records
 

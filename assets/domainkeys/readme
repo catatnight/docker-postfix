@@ -1,1 +1,0 @@
-put your domain key file (.private) here

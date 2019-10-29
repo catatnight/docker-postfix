@@ -1,1 +1,0 @@
-put your SSL certificates key(.key) and cert(.crt) here
