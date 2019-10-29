@@ -6,11 +6,8 @@ LABEL maintainer="source@kingsquare.nl"
 ENV DEBIAN_FRONTEND noninteractive
 
 # Update
-RUN apt -yq update
-
-# Start editing
-# Install package here for cache
 RUN \
+    apt -yq update && \
     apt -yq install \
         supervisor \
         ca-certificates \
@@ -25,6 +22,9 @@ RUN \
     rm -rf /usr/share/man/?? /usr/share/man/??_*
 
 ENV DEBIAN_FRONTEND ""
+
+# Expose port(s)
+#EXPOSE 25 587 465
 
 # Add files
 ADD assets/install.sh /opt/install.sh
