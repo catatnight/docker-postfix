@@ -22,7 +22,7 @@ RUN \
     && \
     apt -yq autoremove && \
     rm -rf /var/apt/lists/* && \
-    rm -rf /usr/share/man/?? /usr/share/man/??_* && \
+    rm -rf /usr/share/man/?? /usr/share/man/??_*
 
 ENV DEBIAN_FRONTEND ""
 
