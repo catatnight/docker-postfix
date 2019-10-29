@@ -2,7 +2,8 @@ FROM debian:buster-slim
 
 LABEL maintainer="source@kingsquare.nl"
 
-RUN \
+RUN set -ex; \
+	\
     DEBIAN_FRONTEND=noninteractive apt -yq update && \
     DEBIAN_FRONTEND=noninteractive apt -yq install \
         supervisor \
@@ -18,6 +19,9 @@ RUN \
         procps \
     && \
     apt -yq autoremove && \
+    apt -yq clean && \
+    rm -rf /var/log/{apt/*,dpkg.log,alternatives.log} && \
+    rm -rf /var/log/apt/* && \
     rm -rf /var/apt/lists/* && \
     rm -rf /usr/share/man/?? /usr/share/man/??_*
 
