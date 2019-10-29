@@ -13,6 +13,9 @@ RUN \
         opendkim \
         opendkim-tools \
         rsyslog \
+        htop \
+        pfqueue \
+        procps \
     && \
     apt -yq autoremove && \
     rm -rf /var/apt/lists/* && \
