@@ -9,10 +9,15 @@ fi
 cat >/etc/supervisor/conf.d/supervisord.conf <<EOF
 [supervisord]
 nodaemon=true
+loglevel = INFO
+
+[unix_http_server]
+username = "$(echo "${HOSTNAME}$(date)username" | sha256sum)"
+password = "$(echo "${HOSTNAME}$(date)password" | sha256sum)"
 
 [program:postfix]
 command=/opt/postfix.sh
 
 [program:rsyslog]
-command=/usr/sbin/rsyslogd -n -c3
+command=/usr/sbin/rsyslogd -n
 EOF
