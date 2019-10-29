@@ -117,6 +117,7 @@ cat >> /etc/opendkim/TrustedHosts <<EOF
 127.0.0.1
 localhost
 
+$maildomain
 *.$maildomain
 EOF
 cat >> /etc/opendkim/KeyTable <<EOF
@@ -125,5 +126,7 @@ EOF
 cat >> /etc/opendkim/SigningTable <<EOF
 *@$maildomain ${dkimselector:-mail}._domainkey.$maildomain
 EOF
+
+chown opendkim:opendkim /etc/opendkim/domainkeys
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
 chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
