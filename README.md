@@ -31,6 +31,17 @@ TLS and OpenDKIM support are optional.
 			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
 			--name postfix -d catatnight/postfix
 	```
+	You may specify key selector if selector *mail* is already allocated by passing keyselector environment variable.
+	In this case $keyselector.private will be searched in /etc/opendkim/domainkeys inside container.
+
+	```bash
+	$ sudo docker run -p 25:25 \
+			-e maildomain=mail.example.com -e keyselector=app \
+      -e smtp_user=user:pwd \
+      -v /path/to/domainkeys:/etc/opendkim/domainkeys \
+			--name postfix -d catatnight/postfix
+	```
+
 3. Enable TLS(587): save your SSL certificates ```.key``` and ```.crt``` to  ```/path/to/certs```
 
 	```bash
