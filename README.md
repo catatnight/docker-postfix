@@ -1,3 +1,7 @@
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kingsquare/postfix?style=flat-square)
+![Docker Pulls](https://img.shields.io/docker/pulls/kingsquare/postfix?style=flat-square)
+![Docker Stars](https://img.shields.io/docker/stars/kingsquare/postfix?style=flat-square)
+
 # docker-postfix
 
 Postfix in a container with optional SMTP authentication (sasldb), DKIM support, TLS support.
