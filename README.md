@@ -19,6 +19,7 @@ Build local image from repo
 	```bash
 	docker run \
 	    -p 25:25 \
+        -p 587:587 \
         -e maildomain=mail.example.com \
         -e smtp_user=user:pwd \
         --name postfix \
@@ -31,7 +32,8 @@ Build local image from repo
 
 	```bash
 	docker run \
-        -p 25:25 \
+	    -p 25:25 \
+        -p 587:587 \
         -e maildomain=mail.example.com \
         -e smtp_user=/etc/postfix/smtp_user \
         --name postfix \
@@ -45,7 +47,8 @@ Build local image from repo
 
 	```bash
 	docker run \
-        -p 25:25 \
+	    -p 25:25 \
+        -p 587:587 \
         -e maildomain=mail.example.com \
         -e smtp_user=user:pwd \
         -e dkimselector=mail \
@@ -59,6 +62,7 @@ Build local image from repo
 	```bash
 	docker run \
 	    -p 25:25 \
+	    -p 587:587 \
         -e maildomain=mail.example.com \
         -e smtp_user=user:pwd \
         -e dkimselector=mail \
@@ -67,10 +71,11 @@ Build local image from repo
         -d kingsquare/postfix
 	```
 
-1. Enable TLS(587): save your SSL certificates .key` and `.crt` to  `/path/to/certs`
+1. Enable TLS: save your SSL certificates .key` and `.crt` to  `/path/to/certs`
     
     ```bash
     docker run \
+	    -p 25:25 \
         -p 587:587 \
         -e maildomain=mail.example.com \
         -e smtp_user=user:pwd \
