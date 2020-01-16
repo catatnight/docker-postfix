@@ -62,10 +62,10 @@ $maildomain
 *.$maildomain
 EOF
 cat >>/etc/opendkim/KeyTable <<EOF
-${dkimselector:-mail}._domainkey.$maildomain $maildomain:${dkimselector:-mail}:$(find /etc/opendkim/domainkeys -iname *.private)
+${dkimselector:-default}._domainkey.$maildomain $maildomain:${dkimselector:-mail}:$(find /etc/opendkim/domainkeys -iname *.private)
 EOF
 cat >>/etc/opendkim/SigningTable <<EOF
-*@$maildomain ${dkimselector:-mail}._domainkey.$maildomain
+*@$maildomain ${dkimselector:-default}._domainkey.$maildomain
 EOF
 
 chown opendkim:opendkim /etc/opendkim/domainkeys
