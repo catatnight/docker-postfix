@@ -1,6 +1,6 @@
-![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kingsquare/postfix?style=flat-square)
-![Docker Pulls](https://img.shields.io/docker/pulls/kingsquare/postfix?style=flat-square)
-![Docker Stars](https://img.shields.io/docker/stars/kingsquare/postfix?style=flat-square)
+[![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kingsquare/postfix?style=flat-square)](https://hub.docker.com/r/kingsquare/postfix/builds)
+[![Docker Pulls](https://img.shields.io/docker/pulls/kingsquare/postfix?style=flat-square)](https://hub.docker.com/r/kingsquare/postfix)
+[![Docker Stars](https://img.shields.io/docker/stars/kingsquare/postfix?style=flat-square)](https://hub.docker.com/r/kingsquare/postfix)
 
 # docker-postfix
 
