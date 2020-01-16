@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:buster-slim as build
 
 LABEL maintainer="source@kingsquare.nl"
 
@@ -26,6 +26,8 @@ RUN set -ex; \
     rm -rf /usr/share/man/?? /usr/share/man/??_*
 
 #EXPOSE 25 587 465
+
+FROM build
 
 ADD src /app
 
