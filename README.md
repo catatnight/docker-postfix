@@ -1,4 +1,9 @@
+[![Docker Build Status](https://img.shields.io/docker/cloud/build/kingsquare/postfix?style=flat-square)](https://hub.docker.com/r/kingsquare/postfix/builds)
 [![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/kingsquare/postfix?style=flat-square)](https://hub.docker.com/r/kingsquare/postfix/builds)
+[![GitHub Tag](https://img.shields.io/github/v/tag/kingsquare/docker-postfix?style=flat-square)](https://github.com/kingsquare/docker-postfix)
+[![GitHub License](https://img.shields.io/github/license/kingsquare/docker-postfix?style=flat-square)](https://github.com/kingsquare/docker-postfix)
+[![GitHub language count](https://img.shields.io/github/languages/count/kingsquare/docker-postfix?style=flat-square)](https://github.com/kingsquare/docker-postfix)
+[![GitHub top language](https://img.shields.io/github/languages/top/kingsquare/docker-postfix?style=flat-square)](https://github.com/kingsquare/docker-postfix)
 [![Docker Pulls](https://img.shields.io/docker/pulls/kingsquare/postfix?style=flat-square)](https://hub.docker.com/r/kingsquare/postfix)
 [![Docker Stars](https://img.shields.io/docker/stars/kingsquare/postfix?style=flat-square)](https://hub.docker.com/r/kingsquare/postfix)
 
