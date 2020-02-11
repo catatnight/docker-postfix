@@ -10,6 +10,7 @@ cat >/etc/supervisor/conf.d/supervisord.conf <<EOF
 [supervisord]
 nodaemon=true
 loglevel = INFO
+user=root
 
 [unix_http_server]
 username = "$(echo "${HOSTNAME}$(date)username" | sha256sum)"
