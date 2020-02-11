@@ -4,6 +4,9 @@
 # Enable TLS
 ############
 
+# fix cert location
+postconf smtp_tls_CAfile=/etc/ssl/certs/ca-certificates.crt
+
 # some better TLS defaults as of 2019-10
 postconf -e tls_high_cipherlist=EECDH+AESGCM:EDH+AESGCM:kEECDH+AESGCM:kEDH+AESGCM:kEECDH:+kEECDH+SHA:kEDH:+kEDH+SHA:+kEDH+CAMELLIA:kECDH:+kECDH+SHA:kRSA:+kRSA+SHA:+kRSA+CAMELLIA:!aNULL:!eNULL:!SSLv2:!RC4:!MD5:!DES:!EXP:!SEED:!IDEA:!3DES
 postconf -e tls_medium_cipherlist=EECDH+AESGCM:EDH+AESGCM:kEECDH+AESGCM:kEDH+AESGCM:kEECDH:+kEECDH+SHA:kEDH:+kEDH+SHA:+kEDH+CAMELLIA:kECDH:+kECDH+SHA:kRSA:+kRSA+SHA:+kRSA+CAMELLIA:!aNULL:!eNULL:!SSLv2:!MD5:!DES:!EXP:!SEED:!IDEA:!3DES
@@ -40,6 +43,7 @@ if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/ce
   postconf -e smtpd_tls_mandatory_protocols=!SSLv2,!SSLv3
   postconf -e smtpd_tls_exclude_ciphers=EXP,MEDIUM,LOW,DES,3DES,SSLv2
   postconf -e smtpd_tls_ciphers=high
+  postconf -e smtpd_tls_mandatory_ciphers=medium
 
   chmod 400 /etc/postfix/certs/*.*
   # /etc/postfix/master.cf
