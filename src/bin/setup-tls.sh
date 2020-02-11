@@ -16,7 +16,7 @@ postconf -e smtp_tls_security_level=may
 postconf -e smtp_tls_note_starttls_offer=yes
 postconf -e smtp_tls_protocols=!SSLv2,!SSLv3
 postconf -e smtp_tls_mandatory_protocols=!SSLv2,!SSLv3
-postconf -e smtp_tls_exclude_ciphers=EXP, MEDIUM, LOW, DES, 3DES, SSLv2
+postconf -e smtp_tls_exclude_ciphers=EXP,MEDIUM,LOW,DES,3DES,SSLv2
 postconf -e smtp_tls_ciphers=high
 postconf -e smtp_send_xforward_command=yes
 
@@ -38,7 +38,7 @@ if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/ce
   postconf -e smtpd_tls_received_header=yes
   postconf -e smtpd_tls_protocols=!SSLv2,!SSLv3
   postconf -e smtpd_tls_mandatory_protocols=!SSLv2,!SSLv3
-  postconf -e smtpd_tls_exclude_ciphers=EXP, MEDIUM, LOW, DES, 3DES, SSLv2
+  postconf -e smtpd_tls_exclude_ciphers=EXP,MEDIUM,LOW,DES,3DES,SSLv2
   postconf -e smtpd_tls_ciphers=high
 
   chmod 400 /etc/postfix/certs/*.*
