@@ -18,6 +18,7 @@ postconf -e smtp_tls_protocols=!SSLv2,!SSLv3
 postconf -e smtp_tls_mandatory_protocols=!SSLv2,!SSLv3
 postconf -e smtp_tls_exclude_ciphers=EXP, MEDIUM, LOW, DES, 3DES, SSLv2
 postconf -e smtp_tls_ciphers=high
+postconf -e smtp_send_xforward_command=yes
 
 if [ ! -d /etc/postfix/certs ]; then
   echo "INFO [postfix] not enabling smtpd TLS"
