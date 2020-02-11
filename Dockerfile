@@ -3,13 +3,14 @@ FROM debian:buster-slim as build
 LABEL maintainer="source@kingsquare.nl"
 
 RUN set -ex; \
-	\
+    \
     DEBIAN_FRONTEND=noninteractive apt -yq update && \
     DEBIAN_FRONTEND=noninteractive apt -yq install \
         supervisor \
         ca-certificates \
         openssl \
         postfix \
+        postfix-pcre \
         sasl2-bin \
         opendkim \
         opendkim-tools \
