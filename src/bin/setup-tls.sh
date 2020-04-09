@@ -28,10 +28,16 @@ if [ ! -d /etc/postfix/certs ]; then
   exit 0
 fi
 
-if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/certs -iname *.key)" ]]; then
+TLS_CERT_FILE="$(find /etc/postfix/certs -iname *.crt)"
+TLS_KEY_FILE="$(find /etc/postfix/certs -iname *.key)"
+
+if [[ -n "${TLS_CERT_FILE}" ]]; then
   # /etc/postfix/main.cf
-  postconf -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname *.crt)
-  postconf -e smtpd_tls_key_file=$(find /etc/postfix/certs -iname *.key)
+  postconf -e smtpd_tls_cert_file="${TLS_CERT_FILE}"
+
+  if [[ -n "${TLS_KEY_FILE}" ]]; then
+    postconf -e smtpd_tls_key_file="${TLS_KEY_FILE}"
+  fi
 
   #postconf -e smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 

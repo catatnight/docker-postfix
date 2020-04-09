@@ -80,8 +80,9 @@ Build local image from repo
         -d kingsquare/postfix
 	```
 
-1. Enable TLS: save your SSL certificates .key` and `.crt` to  `/path/to/certs`
-    
+1. Enable TLS: add your SSL certificates `.key` and `.crt` files to  `/path/to/certs`. 
+    If you have a combined crt+key file then make sure it's extension is `.crt`
+
     ```bash
     docker run \
 	    -p 25:25 \
