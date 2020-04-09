@@ -39,7 +39,9 @@ if [[ -n "${TLS_CERT_FILE}" ]]; then
     postconf -e smtpd_tls_key_file="${TLS_KEY_FILE}"
   fi
 
-  #postconf -e smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+  if grep -q "PRIVATE KEY" "${TLS_CERT_FILE}"; then
+    postconf -# smtpd_tls_key_file
+  fi
 
   postconf -e smtpd_use_tls=yes
   postconf -e smtpd_tls_loglevel=1
