@@ -13,8 +13,8 @@ loglevel = INFO
 user=root
 
 [unix_http_server]
-username = "$(echo "${HOSTNAME}$(date)username" | sha256sum)"
-password = "$(echo "${HOSTNAME}$(date)password" | sha256sum)"
+username = "$(echo "${HOSTNAME}$(date)username" | sha256sum | awk '{print $1}')"
+password = "$(echo "${HOSTNAME}$(date)password" | sha256sum | awk '{print $1}')"
 
 [program:postfix]
 command=/opt/postfix.sh
