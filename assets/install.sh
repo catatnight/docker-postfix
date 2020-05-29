@@ -189,22 +189,13 @@ for d in $virtual_domains; do
   echo >> /etc/opendkim/TrustedHosts "*.$d"
 done
 
-cat >> /etc/opendkim/KeyTable <<EOF
-mail._domainkey.$maildomain $maildomain:mail:$(find /etc/opendkim/domainkeys/$maildomain -iname *.private)
-EOF
-
-for d in $virtual_domains; do
-  echo >> /etc/opendkim/KeyTable "mail._domainkey.$d $d:mail:$(find /etc/opendkim/domainkeys/$d -iname *.private)"
+for d in $maildomain $virtual_domains; do
+  private_key_file=$(find /etc/opendkim/domainkeys/$d -iname *.private)
+  if [[ "$private_key_file" != "" ]]; then
+    echo >> /etc/opendkim/KeyTable     "mail._domainkey.$d $d:mail:$private_key_file"
+    echo >> /etc/opendkim/SigningTable "*@$d mail._domainkey.$d"
+  fi
 done
-
-cat >> /etc/opendkim/SigningTable <<EOF
-*@$maildomain mail._domainkey.$maildomain
-EOF
-
-for d in $virtual_domains; do
-  echo >> /etc/opendkim/SigningTable "*@$d mail._domainkey.$d"
-done
-
 
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
 chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
