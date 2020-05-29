@@ -21,7 +21,7 @@ TLS and OpenDKIM support are optional.
 
 	```bash
 	$ sudo docker run -p 25:25 \
-			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-e mailhostname=mail.example.com -e maildomain=example.com -e smtp_user=user:pwd \
 			--name postfix -d benxo/postfix
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
 	```
@@ -29,7 +29,7 @@ TLS and OpenDKIM support are optional.
 
 	```bash
 	$ sudo docker run -p 25:25 \
-			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-e mailhostname=mail.example.com -e maildomain=example.com -e smtp_user=user:pwd \
 			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
 			--name postfix -d benxo/postfix
 	```
@@ -37,7 +37,7 @@ TLS and OpenDKIM support are optional.
 
 	```bash
 	$ sudo docker run -p 587:587 \
-			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-e mailhostname=mail.example.com -e maildomain=example.com -e smtp_user=user:pwd \
 			-v /path/to/certs:/etc/postfix/certs \
 			--name postfix -d benxo/postfix
 	```
@@ -46,8 +46,9 @@ TLS and OpenDKIM support are optional.
 
 	``` bash
     docker run -p 25:25 -p 587:587 \
-        -e maildomain=mail.example.com -e smtp_user=user:pwd \
+        -e mailhostname=mail.example.com -e maildomain=example.com -e smtp_user=user:pwd \
         -e virtual_domains="mail.example.com test.example.com etc.example.com" \
+		-v /path/to/domainkeys:/etc/opendkim/domainkeys \
         -v /etc/postfix/virtual:/etc/postfix/virtual \
         -v /etc/letsencrypt/live:/etc/letsencrypt/live \
         -v /etc/letsencrypt/archive:/etc/letsencrypt/archive \

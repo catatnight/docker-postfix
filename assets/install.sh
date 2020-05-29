@@ -26,7 +26,12 @@ service postfix start
 tail -f /var/log/mail.log
 EOF
 chmod +x /opt/postfix.sh
-postconf -e myhostname=$maildomain
+
+if [[ -z "$mailhostname" ]]; then
+  mailhostname=$maildomain
+fi
+
+postconf -e myhostname=$mailhostname
 postconf -F '*/*/chroot = n'
 
 # set up some email security as per https://ssl-tools.net/mailservers/ and 
@@ -179,11 +184,27 @@ localhost
 
 *.$maildomain
 EOF
+
+for d in $virtual_domains; do
+  echo >> /etc/opendkim/TrustedHosts "*.$d"
+done
+
 cat >> /etc/opendkim/KeyTable <<EOF
-mail._domainkey.$maildomain $maildomain:mail:$(find /etc/opendkim/domainkeys -iname *.private)
+mail._domainkey.$maildomain $maildomain:mail:$(find /etc/opendkim/domainkeys/$maildomain -iname *.private)
 EOF
+
+for d in $virtual_domains; do
+  echo >> /etc/opendkim/KeyTable "mail._domainkey.$d $d:mail:$(find /etc/opendkim/domainkeys/$d -iname *.private)"
+done
+
 cat >> /etc/opendkim/SigningTable <<EOF
 *@$maildomain mail._domainkey.$maildomain
 EOF
+
+for d in $virtual_domains; do
+  echo >> /etc/opendkim/SigningTable "*@$d mail._domainkey.$d"
+done
+
+
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname *.private)
 chmod 400 $(find /etc/opendkim/domainkeys -iname *.private)
