@@ -14,6 +14,10 @@ chmod +x /opt/postfix.sh
 postconf -e myhostname=$maildomain
 postconf -F '*/*/chroot = n'
 
+if [ "${inet_protocols}" != "" ]; then
+  postconf -e inet_protocols=$inet_protocols
+fi
+
 if [ "${STRIP_RECEIVED_HEADERS}" = "1" ]; then
   echo "/^Received:.*/ IGNORE" >/etc/postfix/header_checks
   echo "header_checks = pcre:/etc/postfix/header_checks" >>/etc/postfix/main.cf
