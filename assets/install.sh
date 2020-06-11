@@ -56,8 +56,8 @@ postconf -e smtpd_tls_mandatory_ciphers=high
 postconf -e "smtpd_tls_exclude_ciphers = DES-CBC3-SHA, EDH-RSA-DES-CBC3-SHA, RC2, RC4, aNULL"
 postconf -e smtpd_tls_eecdh_grade=ultra
 
-# include 172.16/12 for docker
-postconf -e "mynetworks=127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.16.0.0/12"
+# include 172.16/12 and 172.17/12 for docker
+postconf -e "mynetworks=127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 172.16.0.0/12 172.17.0.0/12"
 
 
 ############
