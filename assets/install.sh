@@ -11,6 +11,7 @@ EOF
 chmod +x /opt/postfix.sh
 postconf -e myhostname=$maildomain
 postconf -e maillog_file=/dev/stdout
+postconf -e mydestination="localhost.localdomain,localhost"
 postconf -F '*/*/chroot = n'
 
 ############
