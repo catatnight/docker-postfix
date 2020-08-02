@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t guhu/postfix .
+docker build -t catatnight/postfix .
