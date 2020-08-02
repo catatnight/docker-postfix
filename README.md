@@ -1,7 +1,9 @@
 docker-postfix
 ==============
 
-run postfix with smtp authentication (sasldb) in a docker container.
+**Note** This project is forked from [catatnight/docker-postfix](https://github.com/catatnight/docker-postfix) to provide the same functionality with updated packages.
+
+Run postfix with smtp authentication (sasldb) in a docker container.
 TLS and OpenDKIM support are optional.
 
 ## Requirement
