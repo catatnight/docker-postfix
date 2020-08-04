@@ -20,7 +20,5 @@ fi
 
 if [ "${STRIP_RECEIVED_HEADERS}" = "1" ]; then
   echo "/^Received:.*/ IGNORE" >/etc/postfix/header_checks
-  if ! grep -q "header_checks = pcre:/etc/postfix/header_checks" /etc/postfix/main.cf; then
-    echo "header_checks = pcre:/etc/postfix/header_checks" >>/etc/postfix/main.cf
-  fi
+  postconf -e header_checks=pcre:/etc/postfix/header_checks
 fi
