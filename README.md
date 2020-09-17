@@ -33,7 +33,7 @@ Build local image from repo
         -e smtp_user=user:pwd \
         --name postfix \
         -d kingsquare/postfix
- 
+
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
 	```
 
@@ -47,11 +47,11 @@ Build local image from repo
         -e smtp_user=/etc/postfix/smtp_user \
         --name postfix \
         -d kingsquare/postfix
- 
+
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
- 
+
 	# Set multiple user credentials from file: -v /some/file:/etc/postfix/smtp_users
- 
+
 1. Enable OpenDKIM: save your domain key `.private` in `/path/to/domainkeys`
 
 	```bash
@@ -80,7 +80,7 @@ Build local image from repo
         -d kingsquare/postfix
 	```
 
-1. Enable TLS: add your SSL certificates `.key` and `.crt` files to  `/path/to/certs`. 
+1. Enable TLS: add your SSL certificates `.key` and `.crt` files to  `/path/to/certs`.
     If you have a combined crt+key file then make sure it's extension is `.crt`
 
     ```bash
@@ -93,6 +93,18 @@ Build local image from repo
         --name postfix \
         -d kingsquare/postfix
     ```
+
+1. Optional Postfix configuration passed using environment variables:
+
+    - `inet_protocols`
+
+      this allows postfix to limit the outgoing internet protocols to the given param (`ipv4`, `ipv6`, `all` (=default))
+
+    - `message_size_limit`
+
+      To in-/decrease the message size limit, set this to the required amount in **bytes** (default: `10240000` = 10MB)
+
+  To use this i.e. `-e message_size_limit=51200000` to increase the limit to 50MB
 
 ## Notes
 
