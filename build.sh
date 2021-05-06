@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/bash -xe
 
-docker build -t catatnight/postfix .
+docker build -t benxo/postfix .
