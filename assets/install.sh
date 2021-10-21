@@ -27,6 +27,7 @@ tail -f /var/log/mail.log
 EOF
 chmod +x /opt/postfix.sh
 postconf -e myhostname=$maildomain
+postconf -e local_recipient_maps=
 postconf -F '*/*/chroot = n'
 
 ############
