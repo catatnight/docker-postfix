@@ -39,6 +39,16 @@ TLS and OpenDKIM support are optional.
 			-v /path/to/certs:/etc/postfix/certs \
 			--name postfix -d catatnight/postfix
 	```
+4. Customize configs for postfix
+
+	```bash
+	$ sudo docker run -p 25:25 \
+			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-e postconf=key:value \
+			--name postfix -d hkcomori/postfix
+	# Set multiple configs: -e postconf=key1:value1,key2:value2,...,keyN:valueN
+	# Restrictions: key, value must not contain `,`, `:`
+	```
 
 ## Note
 + Login credential should be set to (`username@mail.example.com`, `password`) in Smtp Client
