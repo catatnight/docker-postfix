@@ -69,6 +69,13 @@ if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/ce
 fi
 
 #############
+# postconf
+#############
+echo "$postconf" | tr , \\n | while IFS=':' read -r _key _value; do
+  postconf -e $_key=$_value;
+done
+
+#############
 #  opendkim
 #############
 
