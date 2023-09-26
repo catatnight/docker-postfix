@@ -1,4 +1,4 @@
-From ubuntu:trusty
+FROM ubuntu:trusty
 MAINTAINER Elliott Ye
 
 # Set noninteractive mode for apt-get
@@ -7,9 +7,12 @@ ENV DEBIAN_FRONTEND noninteractive
 # Update
 RUN apt-get update
 
-# Start editing
-# Install package here for cache
-RUN apt-get -y install supervisor postfix sasl2-bin opendkim opendkim-tools
+# Check OS type
+RUN if grep "ubuntu" /etc/os-release > /dev/null ; \
+    then apt-get -y install supervisor postfix sasl2-bin opendkim opendkim-tools; \
+    elif grep "redhat" /etc/os-release > /dev/null ; \
+    then yum -y install supervisor postfix cyrus-sasl cyrus-sasl-plain opendkim opendkim-tools; \
+    fi
 
 # Add files
 ADD assets/install.sh /opt/install.sh
