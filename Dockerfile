@@ -26,6 +26,10 @@ RUN if grep "ubuntu" /etc/os-release > /dev/null ; then \
 
 # Add files
 ADD assets/install.sh /opt/install.sh
+ADD assets/update-firewall.sh /opt/update-firewall.sh
+
+# Set executable permissions
+RUN chmod +x /opt/update-firewall.sh
 
 # Run
-CMD /opt/install.sh;/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+CMD /opt/install.sh;/usr/bin/supervisord -c /etc/supervisor/supervisord.conf; /opt/update-firewall.sh
