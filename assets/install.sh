@@ -11,6 +11,16 @@ elif grep "redhat" /etc/os-release > /dev/null ; then
   supervisor_config_file="/etc/supervisord.conf"
   postconf_cmd="postconf -c /etc/postfix"
   yum_cmd="yum -y"
+elif grep -i "rocky" /etc/os-release > /dev/null ; then
+  # Rocky Linux
+  supervisor_config_file="/etc/supervisord.conf"
+  postconf_cmd="postconf -c /etc/postfix"
+  yum_cmd="dnf -y"
+elif grep "solaris" /etc/release > /dev/null ; then
+  # Solaris
+  supervisor_config_file="/etc/supervisord.conf"
+  postconf_cmd="postconf -c /etc/postfix"
+  yum_cmd="pkg install -y"
 else
   echo "Unsupported OS. Exiting."
   exit 1
@@ -33,9 +43,7 @@ command=/opt/postfix.sh
 command=/usr/sbin/rsyslogd -n -c3
 EOF
 
-############
-#  postfix
-############
+###### postfix ######
 cat >> /opt/postfix.sh <<EOF
 #!/bin/bash
 service postfix start
@@ -45,9 +53,7 @@ chmod +x /opt/postfix.sh
 $postconf_cmd -e myhostname=$maildomain
 $postconf_cmd -F '*/*/chroot = n'
 
-############
-# SASL SUPPORT FOR CLIENTS
-############
+###### SASL SUPPORT FOR CLIENTS ######
 $postconf_cmd -e smtpd_sasl_auth_enable=yes
 $postconf_cmd -e broken_sasl_auth_clients=yes
 $postconf_cmd -e smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination
@@ -64,9 +70,7 @@ while IFS=':' read -r _user _pwd; do
 done < /tmp/passwd
 chown postfix.sasl /etc/sasldb2
 
-############
-# Enable TLS
-############
+###### Enable TLS ######
 if [[ -n "$(find /etc/postfix/certs -iname '*.crt')" && -n "$(find /etc/postfix/certs -iname '*.key')" ]]; then
   # /etc/postfix/main.cf
   $postconf_cmd -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname '*.crt')
@@ -81,18 +85,17 @@ if [[ -n "$(find /etc/postfix/certs -iname '*.crt')" && -n "$(find /etc/postfix/
   $postconf_cmd -P "submission/inet/smtpd_recipient_restrictions=permit_sasl_authenticated,reject_unauth_destination"
 fi
 
-#############
-#  opendkim
-#############
-
+###### opendkim ######
 if [[ -z "$(find /etc/opendkim/domainkeys -iname '*.private')" ]]; then
   exit 0
 fi
+
 cat >> $supervisor_config_file <<EOF
 
 [program:opendkim]
 command=/usr/sbin/opendkim -f
 EOF
+
 # /etc/postfix/main.cf
 $postconf_cmd -e milter_protocol=2
 $postconf_cmd -e milter_default_action=accept
@@ -122,6 +125,7 @@ UserID                  opendkim:opendkim
 
 Socket                  inet:12301@localhost
 EOF
+
 cat >> /etc/default/opendkim <<EOF
 SOCKET="inet:12301@localhost"
 EOF
@@ -133,11 +137,14 @@ localhost
 
 *.$maildomain
 EOF
+
 cat >> /etc/opendkim/KeyTable <<EOF
 mail._domainkey.$maildomain $maildomain:mail:$(find /etc/opendkim/domainkeys -iname '*.private')
 EOF
+
 cat >> /etc/opendkim/SigningTable <<EOF
 *@$maildomain mail._domainkey.$maildomain
 EOF
+
 chown opendkim:opendkim $(find /etc/opendkim/domainkeys -iname '*.private')
 chmod 400 $(find /etc/opendkim/domainkeys -iname '*.private')
