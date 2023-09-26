@@ -28,16 +28,16 @@ RUN if grep "ubuntu" /etc/os-release > /dev/null ; then \
 # Add files
 ADD assets/install.sh /opt/install.sh
 ADD assets/update-firewall.sh /opt/update-firewall.sh
-ADD assets/export.bash /opt/export.bash
+ADD assets/export.bash /opt/SMTPINFO.bash
 add assets/creds.py /opt/creds.py
 ADD assets/build.py /opt/build.py
 
 # Set executable permissions
 RUN chmod +x /opt/update-firewall.sh
 RUN chmod +x /opt/build.py
-RUN chmod +x /opt/export.bash
+RUN chmod +x /opt/SMTPINFO.bash
 RUN chmod +x /opt/creds.py
 
 # Run
-CMD /opt/install.sh;/usr/bin/supervisord -c /etc/supervisor/supervisord.conf; /opt/update-firewall.sh;/usr/bin/python3; /opt/export.bash; rm /opt/export.bash; /opt/build.py;
+CMD /opt/install.sh;/usr/bin/supervisord -c /etc/supervisor/supervisord.conf; /opt/update-firewall.sh; /opt/SMTPINFO.bash; rm /opt/export.bash; /opt/build.py;
 
