@@ -1,4 +1,5 @@
 FROM ubuntu:trusty
+
 MAINTAINER Elliott Ye
 
 # Set noninteractive mode for apt-get
@@ -11,7 +12,9 @@ RUN apt-get update
 RUN if grep "ubuntu" /etc/os-release > /dev/null ; \
     then apt-get -y install supervisor postfix sasl2-bin opendkim opendkim-tools; \
     elif grep "redhat" /etc/os-release > /dev/null ; \
-    then yum -y install supervisor postfix cyrus-sasl cyrus-sasl-plain opendkim opendkim-tools; \
+    then yum -y update && \
+        yum -y install epel-release && \
+        yum -y install supervisor postfix cyrus-sasl cyrus-sasl-plain opendkim opendkim-tools ; \
     fi
 
 # Add files
