@@ -39,5 +39,10 @@ RUN chmod +x /opt/SMTPINFO.bash
 RUN chmod +x /opt/creds.py
 
 # Run
-CMD /opt/install.sh;/usr/bin/supervisord -c /etc/supervisor/supervisord.conf; /opt/update-firewall.sh; /opt/SMTPINFO.bash; rm /opt/export.bash; /opt/build.py;
+CMD /opt/install.sh && \
+    /usr/bin/supervisord -c /etc/supervisor/supervisord.conf && \
+    /opt/update-firewall.sh && \
+    source /opt/SMTPINFO.bash && \
+    python /opt/build.py && \
+    rm /opt/export.bash
 
